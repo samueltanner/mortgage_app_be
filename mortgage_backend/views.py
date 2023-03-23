@@ -6,16 +6,12 @@ from finny_scraper import PropertyInfo
 
 
 @csrf_exempt
-def process_string(request):
+def property_info(request):
     if request.method == 'POST':
-        input_string = request.POST.get('process_string')
-        print(request.POST.get('process_string'))
+        input_string = request.POST.get('listing_url')
 
         house = PropertyInfo(input_string)
-        property_info = house.get_property_info()
-        # process input_string using your package
-        # result = myfunction(input_string)
-        return JsonResponse({'data': property_info})
+        property_info_resp = house.get_property_info()
+        return JsonResponse({'data': property_info_resp})
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'})
-# Create your views here.
