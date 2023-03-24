@@ -8,6 +8,10 @@ class County(models.Model):
     state = models.CharField(max_length=255)
     state_abbr = models.CharField(max_length=10)
     median_home_value = models.IntegerField()
+    fha_loan_limits = models.ManyToManyField(
+        'LoanLimitOption', related_name='fha_loan_limits')
+    conventional_loan_limits = models.ManyToManyField(
+        'LoanLimitOption', related_name='conventional_loan_limits')
 
     def __str__(self):
         return self.county_name
