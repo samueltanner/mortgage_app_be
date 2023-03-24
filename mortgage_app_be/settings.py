@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mortgage_backend',
-    'django_extensions',
     'mortgage_app_be'
 ]
 

@@ -28,3 +28,17 @@ class LoanLimit(models.Model):
 
     def __str__(self):
         return self.county.county_name
+
+
+class LoanLimitOption(models.Model):
+    one_unit = models.IntegerField()
+    two_unit = models.IntegerField()
+    three_unit = models.IntegerField()
+    four_unit = models.IntegerField()
+    effective_date = models.DateField(default='2023-01-01')
+
+    def __str__(self):
+        return self.get_unit_string()
+
+    def get_unit_string(self):
+        return f"{self.one_unit}-{self.two_unit}-{self.three_unit}-{self.four_unit}"
