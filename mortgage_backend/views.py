@@ -18,35 +18,36 @@ def property_info(request):
     return JsonResponse({'data': property_info_resp})
 
 
-# def loan_limit_by_county(request):
-#     county_name = request.GET.get('county_name')
-#     state_abbr = request.GET.get('state_abbr')
-#     decoded_county_name = urllib.parse.unquote_plus(county_name).upper()
+def loan_limit_by_county(request):
+    county_name = request.GET.get('county_name')
+    state_abbr = request.GET.get('state_abbr')
+    decoded_county_name = urllib.parse.unquote_plus(county_name).upper()
 
-#     try:
-#         county = County.objects.get(county_name__iexact=decoded_county_name,
-#                                     state_abbr__iexact=state_abbr)
-#         loan_limit = LoanLimit.objects.get(county=county)
-#         response_data = {
-#             'county_name': county.county_name,
-#             'fha': {
-#                 'one_unit': loan_limit.fha_one_unit,
-#                 'two_unit': loan_limit.fha_two_unit,
-#                 'three_unit': loan_limit.fha_three_unit,
-#                 'four_unit': loan_limit.fha_four_unit,
-#                 'effective_date': loan_limit.fha_effective_date.isoformat(),
-#             },
-#             'conventional': {
-#                 'one_unit': loan_limit.conventional_one_unit,
-#                 'two_unit': loan_limit.conventional_two_unit,
-#                 'three_unit': loan_limit.conventional_three_unit,
-#                 'four_unit': loan_limit.conventional_four_unit,
-#                 'effective_date': loan_limit.conventional_effective_date.isoformat(),
-#             }
-#         }
-#         return JsonResponse({'data': response_data})
-#     except County.DoesNotExist:
-#         return JsonResponse({'error': 'County not found'})
+    try:
+        county = County.objects.get(county_name__iexact=decoded_county_name,
+                                    state_abbr__iexact=state_abbr)
+        fha_loan_limit = county.fha_loan_limits.first()
+        conventional_loan_limit = county.conventional_loan_limits.first()
+        response_data = {
+            'county_name': county.county_name,
+            'fha': {
+                'one_unit': fha_loan_limit.one_unit,
+                'two_unit': fha_loan_limit.two_unit,
+                'three_unit': fha_loan_limit.three_unit,
+                'four_unit': fha_loan_limit.four_unit,
+                'effective_date': fha_loan_limit.effective_date.isoformat(),
+            },
+            'conventional': {
+                'one_unit': conventional_loan_limit.one_unit,
+                'two_unit': conventional_loan_limit.two_unit,
+                'three_unit': conventional_loan_limit.three_unit,
+                'four_unit': conventional_loan_limit.four_unit,
+                'effective_date': conventional_loan_limit.effective_date.isoformat(),
+            }
+        }
+        return JsonResponse({'data': response_data})
+    except County.DoesNotExist:
+        return JsonResponse({'error': 'County not found'})
 
 
 def county_list(request):
