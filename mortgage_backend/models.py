@@ -27,4 +27,4 @@ class LoanLimitOption(models.Model):
         return self.get_unit_string()
 
     def get_unit_string(self):
-        return f"{self.one_unit}-{self.two_unit}-{self.three_unit}-{self.four_unit}"
+        return f"{self.effective_date} | {self.one_unit}...{self.four_unit}"
