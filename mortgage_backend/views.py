@@ -12,15 +12,21 @@ import urllib.parse
 @csrf_exempt
 def property_info(request):
 
-    input_string = request.GET.get('listing_url')
-    house = PropertyInfo(input_string)
+    listing_url = request.GET.get('listing_url')
+    loan_limits_boolean = request.GET.get('get_loan_limits')
+    print(loan_limits_boolean)
+    # if loan_limits_boolean == 'true':
+    #     loan_limit
+
+    house = PropertyInfo(listing_url)
     property_info_resp = house.get_property_info()
     return JsonResponse({'data': property_info_resp})
 
 
-def loan_limit_by_county(request):
-    county_name = request.GET.get('county_name')
-    state_abbr = request.GET.get('state_abbr')
+def loan_limit_by_county(request=None, county_name=None, state_abbr=None):
+    if request:
+        county_name = request.GET.get('county_name')
+        state_abbr = request.GET.get('state_abbr')
     decoded_county_name = urllib.parse.unquote_plus(county_name).upper()
 
     try:
