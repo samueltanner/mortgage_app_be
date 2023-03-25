@@ -4,8 +4,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from finny_scraper import PropertyInfo
 from .models import County
-from django.core import serializers
-from django.shortcuts import get_object_or_404
 import urllib.parse
 
 
@@ -14,12 +12,15 @@ def property_info(request):
 
     listing_url = request.GET.get('listing_url')
     loan_limits_boolean = request.GET.get('get_loan_limits')
-    print(loan_limits_boolean)
-    # if loan_limits_boolean == 'true':
-    #     loan_limit
-
     house = PropertyInfo(listing_url)
     property_info_resp = house.get_property_info()
+    if loan_limits_boolean == 'true':
+        address = property_info_resp['address']
+        county_name = address['county'].upper()
+        state_abbr = address['state']
+        loan_limits = loan_limit_by_county(
+            county_name=county_name, state_abbr=state_abbr)
+        property_info_resp['loan_limits'] = loan_limits
     return JsonResponse({'data': property_info_resp})
 
 
@@ -51,9 +52,15 @@ def loan_limit_by_county(request=None, county_name=None, state_abbr=None):
                 'effective_date': conventional_loan_limit.effective_date.isoformat(),
             }
         }
-        return JsonResponse({'data': response_data})
+        if request:
+            return JsonResponse({'data': response_data})
+        else:
+            return response_data
     except County.DoesNotExist:
-        return JsonResponse({'error': 'County not found'})
+        if request:
+            return JsonResponse({'error': 'County not found'})
+        else:
+            return {'error': 'County not found'}
 
 
 def county_list(request):
