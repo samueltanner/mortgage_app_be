@@ -21,7 +21,7 @@ def property_info(request):
         loan_limits = loan_limit_by_county(
             county_name=county_name, state_abbr=state_abbr)
         property_info_resp['loan_limits'] = loan_limits
-    return JsonResponse({'data': property_info_resp})
+    return(JsonResponse(property_info_resp))
 
 
 def loan_limit_by_county(request=None, county_name=None, state_abbr=None):
@@ -53,7 +53,7 @@ def loan_limit_by_county(request=None, county_name=None, state_abbr=None):
             }
         }
         if request:
-            return JsonResponse({'data': response_data})
+            return JsonResponse(response_data)
         else:
             return response_data
     except County.DoesNotExist:
@@ -65,9 +65,9 @@ def loan_limit_by_county(request=None, county_name=None, state_abbr=None):
 
 def county_list(request):
     state_abbr = request.GET.get('state_abbr')
-    if state_abbr is None:
+    if state_abbr is None or state_abbr == '':
         counties = County.objects.all()
     else:
         counties = County.objects.filter(state_abbr__iexact=state_abbr)
 
-    return JsonResponse({'data': list(counties.values('id', 'county_name', 'state_abbr'))})
+    return JsonResponse({'counties': list(counties.values('id', 'county_name', 'state_abbr'))})
