@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.contrib import admin
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from finny_scraper import PropertyInfo
+# from finny_scraper import PropertyInfo
 from .models import County
 import urllib.parse
+from finny_scraper_local.utils import PropertyInfo
 
 
 @csrf_exempt
