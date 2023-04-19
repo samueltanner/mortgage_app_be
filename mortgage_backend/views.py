@@ -70,4 +70,4 @@ def county_list(request):
     else:
         counties = County.objects.filter(state_abbr__iexact=state_abbr)
 
-    return JsonResponse({'counties': list(counties.values('id', 'county_name', 'state_abbr'))})
+    return JsonResponse({'data': list(counties.values('id', 'county_name', 'state_abbr'))})
