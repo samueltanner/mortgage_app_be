@@ -114,7 +114,7 @@ class PropertyInfo:
                 state = None
                 zip_code = None
             self.property_object['address'] = {
-                'county': county,
+                'county': county.upper(),
                 'street_address': address,
                 'city': city,
                 'state': state,
@@ -207,8 +207,56 @@ class PropertyInfo:
         return self.property_object
 
 
-url = 'https://www.redfin.com/HI/Kailua/711-Wailepo-Pl-96734/unit-107/home/63838271'
-house = PropertyInfo(url)
-house.get_property_info()
-print(house.get_property_info()
-      )
+class InterestRateInfo:
+    def __init__(self):
+        self.mortgage_list_url = 'https://www.investopedia.com/best-30-year-mortgage-rates-5096821'
+        self.piggy_back_url = 'https://www.bankrate.com/home-equity/current-interest-rates/'
+        r_mortgage_list = requests.get(self.mortgage_list_url, headers={
+            "User-Agent": "Mozilla/5.0"})
+        r_piggy_back = requests.get(self.piggy_back_url, headers={
+            "User-Agent": "Mozilla/5.0"})
+        soup_mortgage_list = BeautifulSoup(r_mortgage_list.text, "html.parser")
+        soup_piggy_back = BeautifulSoup(r_piggy_back.text, "html.parser")
+        self.interest_rate_object = {}
+        self.mortgage_list_results = soup_mortgage_list.find(
+            'table', class_="mntl-sc-block-table__table")
+        self.piggy_back_results = soup_piggy_back.find(
+            'table', class_="Table table-content")
+
+    def get_mortgage_rates(self):
+        try:
+            table = self.mortgage_list_results
+            conventional = table.find('td', text='30-Year Fixed').find_next_sibling(
+                'td').text
+            fha = table.find('td', text='FHA 30-Year Fixed').find_next_sibling(
+                'td').text
+            va = table.find('td', text='VA 30-Year Fixed').find_next_sibling(
+                'td').text
+            jumbo = table.find('td', text='Jumbo 30-Year Fixed').find_next_sibling(
+                'td').text
+            self.interest_rate_object['conventional'] = float(conventional.replace(
+                '%', ''))
+            self.interest_rate_object['fha'] = float(fha.replace('%', ''))
+            self.interest_rate_object['va'] = float(va.replace('%', ''))
+            self.interest_rate_object['jumbo'] = float(jumbo .replace('%', ''))
+        except:
+            self.interest_rate_object['conventional'] = None
+            self.interest_rate_object['fha'] = None
+            self.interest_rate_object['va'] = None
+            self.interest_rate_object['jumbo'] = None
+
+    def get_piggy_back_rates(self):
+        try:
+            table = self.piggy_back_results
+            heloc = table.find(
+                'td', string=lambda text: text and 'heloc' in text.lower())
+            rate = heloc.find_next_sibling('td').text
+            self.interest_rate_object['piggy_back'] = float(rate.replace(
+                '%', '').replace('\n', ''))
+        except:
+            self.interest_rate_object['piggy_back'] = None
+
+    def get_interest_rate_info(self):
+        self.get_mortgage_rates()
+        self.get_piggy_back_rates()
+        return self.interest_rate_object

@@ -2,10 +2,9 @@ from django.shortcuts import render
 from django.contrib import admin
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-# from finny_scraper import PropertyInfo
 from .models import County
 import urllib.parse
-from finny_scraper_local.utils import PropertyInfo
+from finny_scraper_local.utils import PropertyInfo, InterestRateInfo
 
 
 @csrf_exempt
@@ -22,6 +21,8 @@ def property_info(request):
         loan_limits = loan_limit_by_county(
             county_name=county_name, state_abbr=state_abbr)
         property_info_resp['loan_limits'] = loan_limits
+        print('resp')
+        print(property_info_resp)
     return(JsonResponse(property_info_resp))
 
 
@@ -72,3 +73,9 @@ def county_list(request):
         counties = County.objects.filter(state_abbr__iexact=state_abbr)
 
     return JsonResponse({'data': list(counties.values('id', 'county_name', 'state_abbr'))})
+
+
+def interest_rates(request):
+    interest_rates = InterestRateInfo()
+    interest_rate_response = interest_rates.get_interest_rate_info()
+    return JsonResponse(interest_rate_response)
