@@ -12,16 +12,19 @@ class PropertyInfo:
 
     # Property Image
     def get_property_image(self):
-        images = self.results.find_all(
-            "div", class_="InlinePhotoPreview--Photo")
-        if images:
-            main_image_source = images[0].img['src']
-            self.property_object['image'] = main_image_source
-            return main_image_source
-        else:
+        try:
+            images = self.results.find_all(
+                "div", class_="InlinePhotoPreview--Photo")
+            if images:
+                main_image_source = images[0].img['src']
+                self.property_object['image'] = main_image_source
+                return main_image_source
+            else:
+                self.property_object['image'] = None
+                return None
+        except:
             self.property_object['image'] = None
             return None
-
     # Listing Price
     def get_listing_price(self):
         house_price_element = self.results.find(
@@ -169,6 +172,7 @@ class PropertyInfo:
             'property_taxes': None,
             'hoa': None,
             'interest_rate_rf': None,
+            'homeowners_insurance': None
         }
         color_bar_section = self.results.find('div', class_="colorBarLegend")
 
@@ -184,11 +188,17 @@ class PropertyInfo:
             if title == 'HOA Dues':
                 payment_info['hoa'] = int(
                     item.next_sibling.text.replace('$', '').replace(',', ''))
+            if title == "Homeowners' Insurance" or title == "Homeowner's Insurance":
+                payment_info['homeowners_insurance'] = int(
+                    item.next_sibling.text.replace('$', '').replace(',', ''))
 
         mortgage_form = self.results.find(
             'div', class_="MortgageCalculatorForm")
-        interest_rate = mortgage_form.find(
-            'div', {'class': 'panel-title'}, text='Loan Details').find_next_sibling('div', {'class': 'panel-value'}).text.strip()
+        try:
+            interest_rate = mortgage_form.find(
+                'div', {'class': 'panel-title'}, text='Loan Details').find_next_sibling('div', {'class': 'panel-value'}).text.strip()
+        except:
+            interest_rate = None
         if interest_rate:
             payment_info['interest_rate_rf'] = float(
                 interest_rate.replace('%', '').replace(',', ''))
