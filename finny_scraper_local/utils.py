@@ -26,6 +26,7 @@ class PropertyInfo:
             self.property_object['image'] = None
             return None
     # Listing Price
+
     def get_listing_price(self):
         house_price_element = self.results.find(
             'div', {'data-rf-test-id': 'abp-price'})
@@ -182,21 +183,21 @@ class PropertyInfo:
             'span', class_="Row--header")
         for item in monthly_cost_items:
             title = item.text
-            if title == 'Property Taxes':
+            if title.lower() == 'property taxes':
                 payment_info['property_taxes'] = int(
                     item.next_sibling.text.replace('$', '').replace(',', ''))
-            if title == 'HOA Dues':
+            if title.lower() == 'hoa dues':
                 payment_info['hoa'] = int(
                     item.next_sibling.text.replace('$', '').replace(',', ''))
-            if title == "Homeowners' Insurance" or title == "Homeowner's Insurance":
+            if title.lower() == "homeowners' insurance" or title == "homeowner's insurance":
                 payment_info['homeowners_insurance'] = int(
                     item.next_sibling.text.replace('$', '').replace(',', ''))
 
         mortgage_form = self.results.find(
             'div', class_="MortgageCalculatorForm")
         try:
-            interest_rate = mortgage_form.find(
-                'div', {'class': 'panel-title'}, text='Loan Details').find_next_sibling('div', {'class': 'panel-value'}).text.strip()
+            interest_rate = mortgage_form.find('div', {'class': 'panel-title'}, text=lambda text: text and 'loan details' in text.lower(
+            )).find_next_sibling('div', {'class': 'panel-value'}).text.strip()
         except:
             interest_rate = None
         if interest_rate:

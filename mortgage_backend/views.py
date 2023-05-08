@@ -21,8 +21,6 @@ def property_info(request):
         loan_limits = loan_limit_by_county(
             county_name=county_name, state_abbr=state_abbr)
         property_info_resp['loan_limits'] = loan_limits
-        print('resp')
-        print(property_info_resp)
     return(JsonResponse(property_info_resp))
 
 
