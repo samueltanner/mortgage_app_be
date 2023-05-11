@@ -25,8 +25,23 @@ class PropertyInfo:
         except:
             self.property_object['image'] = None
             return None
-    # Listing Price
+    # SQFT
 
+    def get_sqft(self):
+        try:
+            sqft_element = self.results.find(
+                'div', class_="sqft-section")
+            if sqft_element:
+                sqft = sqft_element.find(class_="statsValue").text
+                clean_sqft = int(
+                    round(float(sqft.replace(',', '').replace('sqft', '').strip())))
+                self.property_object['sqft'] = clean_sqft
+                return clean_sqft
+        except:
+            self.property_object['sqft'] = None
+            return None
+
+    # Listing Price
     def get_listing_price(self):
         house_price_element = self.results.find(
             'div', {'data-rf-test-id': 'abp-price'})
@@ -66,7 +81,6 @@ class PropertyInfo:
             return None
 
     # Specific Amenities
-
     def get_number_of_units(self):
         amenities = self.results.find(class_="amenities-container")
         number_of_units_element = amenities.find(
@@ -215,6 +229,7 @@ class PropertyInfo:
         self.get_address_info()
         self.get_HOA_dues()
         self.get_payment_info()
+        self.get_sqft()
         return self.property_object
 
 
