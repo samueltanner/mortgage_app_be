@@ -23,3 +23,23 @@ or
 `pip install requirements.text`
 
 The only difference being pip vs. pip3.
+
+**Create a Secret Key**
+
+Create a file at the root of the project called app_secrets.py
+
+In your console run the following script:
+
+`python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())`
+
+This script will generate a secret key. Copy the out put and paste the result into your app_secrets.py like this:
+
+`SECRET_KEY_STRING = '<SECRET KEY>'`
+NOTE: The key needs to be a string, so wrap it in quotes.
+
+**Connecting Settings and Secret Key**
+Open up your settings.py folder in the mortgage_app_be sub directory.
+
+Make sure that SECRET_KEY_STRING is being imported form app_secrets NOT from mortgage_app_be.app_secrets.
+
+
