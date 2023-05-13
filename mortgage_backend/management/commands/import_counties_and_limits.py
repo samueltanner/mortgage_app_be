@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from mortgage_backend.models import LoanLimitOption
 import csv
 from mortgage_backend.models import County, LoanLimitOption
 
