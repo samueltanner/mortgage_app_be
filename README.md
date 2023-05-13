@@ -61,16 +61,15 @@ This will prompt you to add a username, email, and password.
 
 In your web browser go to localhost:8000/admin and login using your super user credentials. You should now see a screen that shows Groups, Users, Countys (spelled wrong), and Loan limit options!
 
-**Load Counties Into DB**
+**Load Counties and Loan Limits Into DB**
 
-There are two .csv files located in this repo. loan_limits.csv and 2023-01-01_loan_limits.csv. This could be a lot cleaner but here is what is going on.
+Go to this website: https://apps.hud.gov/pub/chums/file_layouts.html#Limits2010
 
-The first file is a huge file of all the loan limits in the country. Housing and urban development creates a .txt file that they host on their website, this is a parsed version of it. What I discovered is even though there is 3000+ counties in the USA, there are only a few dozen loan limit options across FHA and Conventional mortgages. 
+Download the following files:
+ 1. CY<current year> FHA Forward Limits (FHA Loan Limits)
+ 2. CY<current year> Fannie/Freddie Limits (Conventional Loan Limits)
 
-The first management command will load all of the counties recognized by HUD into your db.
+Add them to a spreadsheet, remove the first two rows, and save as a .csv file
 
-`python manage.py import_counties <Global path to loan_limits.csv>`
-
-Next we will load in the loan limits for 2023
-
-`python manage.py import_clean_loan_limits <2023-01-01_loan_limits.csv> <Year of loan limit publishing in the following format: 2023-01-01>`
+Run the following command to import both loan limits and associate them to county names:
+`python manage.py import_counties_and_limits <PATH TO FHA LIMITS> <PATH TO CONVENTIONAL LIMITS> <DATE OF PUBLICATION eg. 2023-01-01>`
