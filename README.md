@@ -73,7 +73,3 @@ Add them to a spreadsheet, remove the first two rows, and save as a .csv file
 
 Run the following command to import both loan limits and associate them to county names:
 `python manage.py import_counties_and_limits <PATH TO FHA LIMITS> <PATH TO CONVENTIONAL LIMITS> <DATE OF PUBLICATION eg. 2023-01-01>`
-
-now the part that I am stuck at is:
-
-The only difference between this server and my other instance is that one returns counties with "County" in the name and the other does not. But in the front end I am getting an error where counties arent found and yet the same url returns results in postman
