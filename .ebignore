@@ -1,0 +1,19 @@
+# Ignore common development files and directories
+.git
+.gitignore
+.env
+.vscode
+*.pyc
+
+# Ignore database files (if applicable)
+*.sqlite3
+
+# Ignore static files generated during development
+/staticfiles
+
+# Ignore media files (uploaded user files)
+/media
+
+# Ignore virtual environment files
+/venv
+/.venv
